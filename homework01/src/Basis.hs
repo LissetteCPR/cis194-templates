@@ -21,7 +21,10 @@ module Basis where
 -- []
 
 toDigits :: Integer -> [Integer]
-toDigits = undefined
+toDigits n 
+  | n <=0 = []
+toDigits n = map (\x -> read [x] :: Integer) (show n)
+--toDigitsRev n = reverse (toDigits n)
 
 ----------------------------------------------------------------------
 -- Exercise 2
@@ -35,7 +38,11 @@ toDigits = undefined
 -- [1,4,3]
 
 doubleEveryOther :: [Integer] -> [Integer]
-doubleEveryOther = undefined
+doubleEveryOther [] = [] 
+doubleEveryOther [x] = [x]
+doubleEveryOther (x:y:zs)
+  | even (length (x:y:zs))  = (x *2) : y : doubleEveryOther zs 
+  | otherwise               = x : (y *2) : doubleEveryOther zs 
 
 ----------------------------------------------------------------------
 -- Exercise 3
@@ -47,7 +54,8 @@ doubleEveryOther = undefined
 -- 22
 
 sumDigits :: [Integer] -> Integer
-sumDigits = undefined
+sumDigits xs = sum (map(\x -> if x > 9 then sumDigits [x `div` 10, x `mod` 10] else x) xs)
+    
 
 ----------------------------------------------------------------------
 -- Exercise 4
@@ -61,8 +69,7 @@ sumDigits = undefined
 -- False
 
 validate :: Integer -> Bool
-validate = undefined
-
+validate x = (sumDigits . doubleEveryOther . toDigits) x `mod` 10 == 0
 ----------------------------------------------------------------------
 -- Exercise 5
 ----------------------------------------------------------------------
@@ -76,11 +83,13 @@ type Move = (Peg, Peg)
 -- [("a","c"),("a","b"),("c","b")]
 
 hanoi :: Integer -> Peg -> Peg -> Peg -> [Move]
-hanoi = undefined
+hanoi 0 _ _ _ = []                  
+hanoi n a b c = hanoi (n - 1) a c b ++ [(a, b)] ++ hanoi (n - 1) c b a     
+
 
 ----------------------------------------------------------------------
 -- Exercise 6 (Optional)
 ----------------------------------------------------------------------
 
-hanoi' :: Integer -> Peg -> Peg -> Peg -> Peg -> [Move]
-hanoi' = undefined
+{-hanoi' :: Integer -> Peg -> Peg -> Peg -> Peg -> [Move]
+hanoi' = undefined-}
