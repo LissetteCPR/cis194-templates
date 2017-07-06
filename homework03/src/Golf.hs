@@ -6,6 +6,7 @@
 ----------------------------------------------------------------------
 
 module Golf where
+import Data.List
 
 ----------------------------------------------------------------------
 -- Exercise 1
@@ -25,7 +26,10 @@ module Golf where
 -- []
 
 skips :: [a] -> [[a]]
-skips = undefined
+skips xs = [every n xs | n <- [1..length xs]]
+  where every n xs' = case drop (n-1) xs' of
+                      []     -> []
+                      (y:ys) -> y : every n ys
 
 ----------------------------------------------------------------------
 -- Exercise 2
@@ -41,7 +45,10 @@ skips = undefined
 -- []
 
 localMaxima :: [Integer] -> [Integer]
-localMaxima = undefined
+localMaxima (x:y:z:zs)
+  | y > x && y > z = y : localMaxima (y:z:zs)
+  | otherwise = localMaxima (y:z:zs)
+localMaxima _ = []  
 
 ----------------------------------------------------------------------
 -- Exercise 3
@@ -53,4 +60,7 @@ localMaxima = undefined
 -- " *        \n *        \n *   *    \n==========\n0123456789\n"
 
 histogram :: [Integer] -> String
-histogram = undefined
+histogram xs = unlines . transpose . fmap (reverse . insert) . freqs $ xs
+  where freqs ns = fmap (\n->(n, length . filter (==n) $ ns)) [0..9] 
+        insert (n, f) = take (2 + length xs) $ show n ++ "=" ++ replicate f '*' ++ repeat ' '
+
